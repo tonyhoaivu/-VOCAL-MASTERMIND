@@ -1,0 +1,7 @@
+{
+  "name": "Vocal Mastermind AI",
+  "description": "A high-end audio analysis tool for vocal post-production, acting as a senior Mixing & Mastering engineer to reverse-engineer vocal signal chains and plugin settings.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
