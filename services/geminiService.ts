@@ -4,34 +4,34 @@ import { AnalysisReport } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const systemInstruction = `Bạn là Chuyên gia Mixing chuyên nghiệp (Senior Mixing Engineer). Khi phân tích Vocal, bạn phải cung cấp hướng dẫn bằng hình ảnh thực tế (Visual Demo) và thao tác núm vặn (Knobs) cho một chuỗi Signal Chain toàn diện gồm 8 bước.
-
-Nhiệm vụ của bạn là bóc tách Audio và xuất dữ liệu kỹ thuật cực kỳ chi tiết theo cấu trúc 8 bước Signal Chain:
+const systemInstruction = `Bạn là Chuyên gia Mixing chuyên nghiệp (Senior Mixing Engineer). Nhiệm vụ của bạn là bóc tách Audio và cung cấp hướng dẫn bằng hình ảnh thực tế (Visual Demo) cùng thao tác núm vặn (Knobs) chi tiết cho chuỗi Signal Chain 8 bước.
 
 # 1. PHÂN TÍCH CHUYÊN SÂU (VOCAL TEXTURE):
-- Bắt bệnh: Xác định giọng bị "Boxy", "Harsh", "Thin" hay "Muddy". 
-- Gợi ý phong cách: Mix theo kiểu Modern Pop, Vintage Soul, v.v.
+- Bắt bệnh: Chẩn đoán giọng (Boxy, Harsh, Thin, Muddy).
+- Gợi ý phong cách: Ví dụ "Modern Pop sạch sẽ" hoặc "Vintage Soul ấm áp".
 
-# 2. CHI TIẾT 8 BƯỚC PLUGIN (BẮT BUỘC THEO THỨ TỰ):
-1. **Antares Auto-Tune Pro**: (Pitch Correction) Vẽ giao diện tối, vòng tròn Retune Speed xanh Cyan.
-2. **FabFilter Pro-Q 3**: (Subtractive EQ) Vẽ biểu đồ EQ hiện đại, nền lưới xanh đậm, đường cong có shadow.
-3. **UAD 1176LN**: (Fast Compression) Mặt sắt đen cổ điển, kim VU nhảy mạnh để kiểm soát transient.
-4. **Waves CLA-2A**: (Tonal Smoothing) Mặt máy xám bạc, 2 núm lớn, đồng hồ tròn làm dày vocal.
-5. **FabFilter Pro-DS**: (De-Esser) Giao diện tinh giản, thanh Gain Reduction tím dìm dải xì.
-6. **Soundtoys Decapitator**: (Saturation) Mặt máy Vintage vàng đồng/xám, biểu đồ nhiệt đỏ tạo độ ấm Tube/Tape.
-7. **Delay (Gợi ý: Waves H-Delay hoặc ValhallaDelay)**: Vẽ giao diện đặc trưng (H-Delay có núm xoay lớn phong cách Analog, Valhalla có màu sắc rực rỡ). Giải thích cách tạo độ rộng không gian.
-8. **Reverb (Gợi ý: ValhallaVintageVerb, FabFilter Pro-R hoặc Lexicon PCM)**: Vẽ giao diện huyền thoại (Valhalla có bảng điều khiển digital cổ điển, Pro-R có biểu đồ không gian 3D xanh lá/cyan). Giải thích cách tạo chiều sâu (Depth).
+# 2. CHI TIẾT 8 BƯỚC PLUGIN (PHẢI CÓ MINH HỌA SVG CHI TIẾT):
+Mỗi bước trong plugin_chain phải gồm 3 phần cốt lõi:
+1. [Tên Plugin & Ảnh Demo]: Mã SVG (visual_demo_svg) mô phỏng GIAO DIỆN THẬT (Photorealistic UI).
+2. [Cách chỉnh để Vocal hay hơn]: Giải thích tư duy Mixing (mixing_mindset).
+3. [Visual Knobs Settings]: Vị trí chính xác của từng nút vặn (knob_instruction).
 
-# 3. YÊU CẦU CẤU TRÚC CHO MỖI PLUGIN (TechnicalStep):
-- **ui_description**: [Mô tả thực tế] Mô tả giao diện thực tế của Plugin (Màu sắc, nút bấm, đèn LED, kim đồng hồ).
-- **mixing_mindset**: [Cách chỉnh để Vocal hay hơn] Giải thích tư duy Mixing chuyên nghiệp. Tại sao bước này quan trọng đối với Vocal này?
-- **knob_instruction**: [Thông số Knobs] Vị trí chính xác của từng nút vặn quan trọng nhất (Vị trí kim đồng hồ hoặc giá trị số).
-- **visual_demo_svg**: Mã SVG mô phỏng Photorealistic UI của plugin đó (Cần độ chi tiết cao, màu sắc trung thực với bản gốc).
+Danh sách Plugin:
+1. Antares Auto-Tune Pro
+2. FabFilter Pro-Q 3
+3. UAD 1176LN
+4. Waves CLA-2A
+5. FabFilter Pro-DS
+6. Soundtoys Decapitator
+7. Advanced Delay
+8. Advanced Reverb
 
-# 4. THÔNG SỐ NÚT VẶN TỔNG QUAN (visual_data):
-- Cung cấp dữ liệu cho các nút vặn Compressor chính để App vẽ biểu đồ Knob trung tâm.
+# 3. YÊU CẦU KỸ THUẬT QUAN TRỌNG:
+- SVG: Sử dụng mã SVG tối ưu (concise) nhưng vẫn đảm bảo tính thẩm mỹ chuyên nghiệp của Plugin gốc. 
+- JSON: Đảm bảo phản hồi JSON hoàn chỉnh, không được cắt ngang giữa chừng.
+- Ngôn ngữ: Tiếng Việt.
 
-Ngôn ngữ: Tiếng Việt. SVG phải trông như giao diện phần mềm thật, chuyên nghiệp và thẩm mỹ cao.`;
+LƯU Ý: Tuyệt đối không để chuỗi JSON bị cắt cụt. Nếu mã SVG quá dài, hãy đơn giản hóa các đường path nhưng giữ nguyên layout.` ;
 
 const responseSchema = {
   type: Type.OBJECT,
@@ -122,8 +122,8 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
   }
   
   const prompt = input.link 
-    ? `Analyze audio link: ${input.link}. Generate an 8-step high-fidelity plugin chain including advanced Space effects (Delay & Reverb from Waves, Valhalla, or FabFilter). Provide professional mixing mindset for each.`
-    : `Analyze audio file. Generate an 8-step high-fidelity plugin chain including advanced Space effects (Delay & Reverb from Waves, Valhalla, or FabFilter). Provide professional mixing mindset for each.`;
+    ? `Analyze audio link: ${input.link}. Generate an 8-step professional mixing chain with clear SVG mockups and specific knob values.`
+    : `Analyze audio file. Generate an 8-step professional mixing chain with clear SVG mockups and specific knob values.`;
 
   parts.push({ text: prompt });
 
@@ -134,16 +134,19 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
       systemInstruction,
       responseMimeType: "application/json",
       responseSchema,
-      temperature: 0.1
+      temperature: 0.4,
+      maxOutputTokens: 8192 // Tăng đáng kể để tránh Unterminated JSON
     }
   });
 
   try {
     const text = response.text;
     if (!text) throw new Error("No response text");
-    return JSON.parse(text) as AnalysisReport;
+    // Loại bỏ các ký tự rác nếu có trước khi parse
+    const cleanText = text.trim();
+    return JSON.parse(cleanText) as AnalysisReport;
   } catch (error) {
-    console.error("Parse error:", error);
+    console.error("Parse error detail:", error);
     throw error;
   }
 }
