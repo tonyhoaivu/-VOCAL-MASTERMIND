@@ -61,13 +61,13 @@ const App: React.FC = () => {
       setLoadingPhase(LoadingPhase.IDLE);
     } catch (err) {
       console.error(err);
-      setError("Hệ thống giải mã tín hiệu thất bại. Hãy đảm bảo file âm thanh chất lượng cao để AI có thể phân tích chính xác.");
+      setError("Hệ thống giải mã tín hiệu thất bại. Hãy đảm bảo tín hiệu âm thanh rõ ràng và định dạng tệp chuẩn Studio (WAV/MP3).");
       setLoadingPhase(LoadingPhase.IDLE);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0A0C10] text-slate-300 selection:bg-cyan-500/30 selection:text-white font-sans">
+    <div className="min-h-screen flex flex-col bg-[#06080A] text-slate-300 selection:bg-cyan-500/30 selection:text-white font-sans">
       <Header />
       
       <main className="flex-grow max-w-7xl mx-auto w-full px-6 py-12">
@@ -75,79 +75,85 @@ const App: React.FC = () => {
           
           {/* LEFT: STUDIO CONTROL CENTER */}
           <div className="lg:col-span-4 space-y-8">
-            <div className="bg-[#161B22] border border-white/5 rounded-[3rem] p-8 shadow-2xl sticky top-24 ring-1 ring-white/10">
-              <div className="flex items-center justify-between mb-10">
-                 <h2 className="text-[11px] font-black text-cyan-500 uppercase tracking-[0.3em] flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
-                  Studio Console
+            <div className="bg-[#101419] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl sticky top-24 ring-1 ring-white/10 z-20">
+              <div className="flex items-center justify-between mb-8">
+                 <h2 className="text-[11px] font-black text-cyan-400 uppercase tracking-[0.4em] flex items-center gap-3">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                  </span>
+                  Master Console
                 </h2>
-                <span className="text-[9px] font-black bg-white/5 text-slate-400 px-3 py-1 rounded-full border border-white/10 uppercase tracking-tighter">Engine v3.5</span>
+                <span className="text-[9px] font-black bg-cyan-500/10 text-cyan-400 px-3 py-1 rounded-md border border-cyan-500/20 uppercase tracking-widest">Live v3.6</span>
               </div>
               
-              <div className="space-y-8">
+              <div className="space-y-6">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] block ml-2">Audio Link (YouTube/Spotify)</label>
+                  <label className="text-[9px] font-bold text-slate-500 uppercase tracking-[0.3em] block ml-2">Reference Source (URL)</label>
                   <input 
                     type="text"
-                    placeholder="Dán liên kết nguồn..."
-                    className="w-full bg-[#0D1117] border border-white/10 rounded-2xl px-6 py-5 text-sm focus:ring-4 focus:ring-cyan-500/20 focus:border-cyan-500 outline-none transition-all text-white placeholder:text-slate-700 shadow-inner"
+                    placeholder="YouTube, SoundCloud, Spotify link..."
+                    className="w-full bg-[#080B0F] border border-white/10 rounded-xl px-5 py-4 text-sm focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 outline-none transition-all text-white placeholder:text-slate-800 shadow-inner"
                     value={link}
                     onChange={(e) => { setLink(e.target.value); setFile(null); setAudioUrl(null); }}
                   />
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                   <div className="flex-grow h-px bg-white/5"></div>
-                  <span className="text-[9px] font-black text-slate-600 uppercase">Input Choice</span>
+                  <span className="text-[8px] font-black text-slate-700 uppercase">Input Node</span>
                   <div className="flex-grow h-px bg-white/5"></div>
                 </div>
 
                 <div 
-                  className={`group border-2 border-dashed rounded-[2rem] p-10 transition-all flex flex-col items-center justify-center text-center cursor-pointer relative overflow-hidden
-                    ${file ? 'border-cyan-500 bg-cyan-500/5' : 'border-white/10 hover:border-cyan-500/50 bg-[#0D1117]'}`}
+                  className={`group border-2 border-dashed rounded-[1.5rem] p-8 transition-all flex flex-col items-center justify-center text-center cursor-pointer relative overflow-hidden
+                    ${file ? 'border-cyan-500/50 bg-cyan-500/5' : 'border-white/5 hover:border-cyan-500/30 bg-[#080B0F]'}`}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="audio/*" className="hidden" />
-                  <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mb-6 transition-all duration-700 ${file ? 'bg-cyan-500 text-white shadow-2xl shadow-cyan-500/50 scale-110' : 'bg-white/5 border border-white/10 text-slate-500 group-hover:text-cyan-400 shadow-sm'}`}>
-                    <i className={`fa-solid ${file ? 'fa-music' : 'fa-microphone-lines'} text-3xl`}></i>
+                  <div className={`w-16 h-16 rounded-[1.2rem] flex items-center justify-center mb-4 transition-all duration-500 ${file ? 'bg-cyan-500 text-white shadow-2xl shadow-cyan-500/40 scale-105' : 'bg-white/5 border border-white/10 text-slate-600 group-hover:text-cyan-400 group-hover:border-cyan-500/40 shadow-sm'}`}>
+                    <i className={`fa-solid ${file ? 'fa-music' : 'fa-microphone-lines'} text-2xl`}></i>
                   </div>
-                  <p className="text-sm font-black text-slate-300 uppercase tracking-widest">{file ? file.name : "Tải lên File Vocal"}</p>
-                  {!file && <p className="text-[10px] font-bold text-slate-600 mt-3 uppercase tracking-widest">WAV / MP3 / AIFF</p>}
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-[0.15em]">{file ? file.name : "Tải lên Vocal Stem"}</p>
                 </div>
 
                 {audioUrl && (
-                  <div className="bg-black/40 border border-white/10 rounded-3xl p-6 animate-in fade-in slide-in-from-top-6 duration-500 shadow-2xl">
-                    <p className="text-[10px] font-black text-cyan-500 uppercase mb-4 tracking-[0.3em] flex items-center gap-3">
-                       <i className="fa-solid fa-volume-high"></i> Monitoring Input
+                  <div className="bg-white rounded-2xl p-5 animate-in fade-in slide-in-from-top-4 duration-500 shadow-2xl border border-cyan-100 ring-4 ring-cyan-500/5">
+                    <p className="text-[10px] font-black text-cyan-600 uppercase mb-4 tracking-[0.3em] flex items-center justify-between">
+                       <span className="flex items-center gap-2">
+                         <i className="fa-solid fa-headphones"></i> Monitor Output
+                       </span>
+                       <span className="text-[8px] opacity-60">Source Ready</span>
                     </p>
-                    <audio controls src={audioUrl} className="w-full h-10 custom-audio invert" />
+                    <div className="p-1 bg-slate-50 rounded-xl">
+                      <audio controls src={audioUrl} className="w-full h-10 custom-audio-pro" />
+                    </div>
                   </div>
                 )}
 
                 <button 
                   onClick={runAnalysis}
                   disabled={loadingPhase !== LoadingPhase.IDLE || (!file && !link.trim())}
-                  className="w-full py-6 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-30 text-white font-black text-[12px] uppercase tracking-[0.4em] rounded-[1.5rem] transition-all shadow-2xl shadow-cyan-600/20 flex items-center justify-center gap-4 active:scale-95 group"
+                  className="w-full py-5 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-30 text-white font-black text-[12px] uppercase tracking-[0.5em] rounded-xl transition-all shadow-2xl shadow-cyan-600/20 flex items-center justify-center gap-3 active:scale-95 group overflow-hidden relative"
                 >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   {loadingPhase !== LoadingPhase.IDLE ? (
                     <>
-                      <i className="fa-solid fa-sync animate-spin"></i>
-                      Reconstructing...
+                      <i className="fa-solid fa-spinner-third animate-spin"></i>
+                      Scanning...
                     </>
                   ) : (
                     <>
-                      <i className="fa-solid fa-microchip group-hover:rotate-180 transition-transform duration-1000"></i>
-                      Deep Analysis
+                      <i className="fa-solid fa-bolt-lightning group-hover:scale-125 transition-transform"></i>
+                      Run Analysis
                     </>
                   )}
                 </button>
               </div>
 
               {error && (
-                <div className="mt-8 p-6 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-rose-400 text-[11px] font-black uppercase text-center leading-relaxed flex flex-col items-center gap-4 animate-in fade-in zoom-in-95">
-                  <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center">
-                    <i className="fa-solid fa-exclamation-triangle"></i>
-                  </div>
+                <div className="mt-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-[10px] font-bold uppercase text-center leading-relaxed flex flex-col items-center gap-3 animate-pulse">
+                  <i className="fa-solid fa-triangle-exclamation text-lg"></i>
                   {error}
                 </div>
               )}
@@ -157,50 +163,75 @@ const App: React.FC = () => {
           {/* RIGHT: PROFESSIONAL BLUEPRINT */}
           <div className="lg:col-span-8">
             {report ? (
-              <div className="space-y-24 animate-in fade-in slide-in-from-bottom-12 duration-1000 pb-40">
+              <div className="space-y-16 animate-in fade-in slide-in-from-bottom-12 duration-1000 pb-40">
                 
+                {/* PERSISTENT MONITOR DOCK */}
+                {audioUrl && (
+                  <div className="sticky top-24 z-30 bg-white/95 backdrop-blur-xl border border-cyan-200 rounded-[2rem] p-6 shadow-[0_25px_50px_-12px_rgba(6,182,212,0.2)] flex flex-col md:flex-row items-center gap-6 animate-in slide-in-from-top-10 duration-700">
+                    <div className="flex items-center gap-4 shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-cyan-600 flex items-center justify-center text-white shadow-lg">
+                        <i className="fa-solid fa-play"></i>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-cyan-600 uppercase tracking-widest">Studio Monitoring</p>
+                        <p className="text-xs font-bold text-slate-900 truncate max-w-[150px]">{file?.name || "Audio Link"}</p>
+                      </div>
+                    </div>
+                    <div className="flex-grow w-full">
+                       <audio controls src={audioUrl} className="w-full h-10 custom-audio-pro" />
+                    </div>
+                    <div className="shrink-0 flex items-center gap-2">
+                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">HD Audio Stream</span>
+                    </div>
+                  </div>
+                )}
+
                 {/* 1. VOCAL RECON HUB */}
-                <section className="space-y-10">
-                  <div className="flex items-center gap-6">
-                     <div className="w-12 h-1 bg-cyan-600 rounded-full"></div>
-                     <h3 className="text-[14px] font-black text-white uppercase tracking-[0.6em]">
-                        [01. Vocal Reconnaissance]
+                <section className="space-y-8">
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-1 bg-cyan-500 rounded-full"></div>
+                     <h3 className="text-[12px] font-black text-white uppercase tracking-[0.5em]">
+                        [01. Studio Reconnaissance]
                      </h3>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-[#161B22] border border-white/5 p-12 rounded-[4rem] shadow-2xl relative overflow-hidden group">
-                      <div className="absolute -top-12 -right-12 p-24 opacity-[0.02] group-hover:opacity-[0.05] transition-all duration-1000">
-                         <i className="fa-solid fa-dna text-[12rem]"></i>
+                    <div className="bg-[#101419] border border-white/5 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group hover:border-cyan-500/20 transition-all">
+                      <div className="absolute -top-10 -right-10 p-20 opacity-[0.02] group-hover:opacity-[0.06] transition-all duration-1000">
+                         <i className="fa-solid fa-chart-line text-[10rem]"></i>
                       </div>
-                      <span className="text-[10px] font-black text-cyan-500 uppercase block mb-6 tracking-[0.4em] border-l-2 border-cyan-500 pl-6">Texture Analysis</span>
-                      <p className="text-slate-200 text-base leading-relaxed italic font-medium">"{report.vocal_diagnosis.texture}"</p>
+                      <span className="text-[9px] font-black text-cyan-400 uppercase block mb-5 tracking-[0.4em] border-l-2 border-cyan-500 pl-4">Engine Diagnosis</span>
+                      <p className="text-slate-200 text-sm leading-relaxed italic font-medium opacity-90">"{report.vocal_diagnosis.texture}"</p>
                     </div>
-                    <div className="bg-[#0D1117] p-12 rounded-[4rem] shadow-3xl border border-white/10 group ring-1 ring-cyan-500/10">
-                      <span className="text-[10px] font-black text-purple-400 uppercase block mb-6 tracking-[0.4em] border-l-2 border-purple-400 pl-6">Artist Blueprint</span>
-                      <p className="text-slate-300 text-base leading-relaxed opacity-90 group-hover:text-white transition-colors">{report.vocal_diagnosis.pitch_saturation}</p>
+                    <div className="bg-[#101419] p-10 rounded-[3rem] shadow-2xl border border-white/5 group hover:border-purple-500/20 transition-all ring-1 ring-purple-500/5">
+                      <span className="text-[9px] font-black text-purple-400 uppercase block mb-5 tracking-[0.4em] border-l-2 border-purple-400 pl-4">Artist Strategy</span>
+                      <p className="text-slate-300 text-sm leading-relaxed opacity-80 group-hover:text-white transition-colors">{report.vocal_diagnosis.pitch_saturation}</p>
                     </div>
                   </div>
                 </section>
 
-                {/* 2. FREQUENCY SPECTRUM */}
-                <section className="bg-[#161B22] border border-white/5 rounded-[5rem] p-16 shadow-3xl relative overflow-hidden ring-1 ring-white/10">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-50"></div>
+                {/* 2. FREQUENCY GEOMETRY */}
+                <section className="bg-[#101419] border border-white/5 rounded-[4rem] p-12 shadow-3xl relative overflow-hidden ring-1 ring-white/10 group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-40"></div>
                   <div className="relative z-10">
-                    <div className="flex items-center gap-6 mb-16">
-                       <div className="w-12 h-1 bg-purple-500 rounded-full"></div>
-                       <h3 className="text-[14px] font-black text-white uppercase tracking-[0.6em]">
-                          [02. Frequency Geometry]
-                       </h3>
+                    <div className="flex items-center justify-between mb-12">
+                       <div className="flex items-center gap-4">
+                          <div className="w-10 h-1 bg-purple-500 rounded-full"></div>
+                          <h3 className="text-[12px] font-black text-white uppercase tracking-[0.5em]">
+                             [02. Frequency Spectrum Map]
+                          </h3>
+                       </div>
+                       <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest border border-white/10 px-3 py-1 rounded-full">FFT Visualizer</span>
                     </div>
                     <div 
-                      className="w-full bg-black/40 rounded-[3.5rem] p-12 border border-white/10 shadow-inner flex items-center justify-center svg-container overflow-hidden backdrop-blur-md"
+                      className="w-full bg-black/50 rounded-[2.5rem] p-10 border border-white/5 shadow-inner flex items-center justify-center svg-container-monitor overflow-hidden backdrop-blur-md group-hover:scale-[1.01] transition-transform duration-700"
                       dangerouslySetInnerHTML={{ __html: report.visual_mapping.eq_curve_svg }}
                     />
-                    <div className="mt-16 grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-6">
                        {report.visual_data.eq_points.map((p, i) => (
-                         <div key={i} className="px-8 py-6 bg-black/20 border border-white/5 rounded-[2rem] text-[11px] font-black shadow-2xl flex flex-col items-center gap-3 hover:-translate-y-2 hover:border-purple-500/30 transition-all cursor-default group">
-                           <span className="text-slate-500 uppercase tracking-[0.3em] text-[9px] group-hover:text-purple-400 transition-colors">{p.type}</span>
-                           <span className="text-white font-mono text-sm">{p.freq}Hz</span>
+                         <div key={i} className="px-6 py-5 bg-white/5 border border-white/5 rounded-[1.5rem] text-[10px] font-black shadow-xl flex flex-col items-center gap-2 hover:bg-white/10 hover:-translate-y-1 transition-all cursor-default group/point">
+                           <span className="text-slate-500 uppercase tracking-[0.3em] text-[8px] group-hover/point:text-purple-400 transition-colors">{p.type}</span>
+                           <span className="text-white font-mono text-xs">{p.freq}Hz</span>
                            <span className={p.gain >= 0 ? 'text-emerald-400 font-mono' : 'text-rose-400 font-mono'}>{p.gain > 0 ? '+' : ''}{p.gain}dB</span>
                          </div>
                        ))}
@@ -208,88 +239,92 @@ const App: React.FC = () => {
                   </div>
                 </section>
 
-                {/* 3. PRO STUDIO RACK */}
-                <section className="space-y-20">
-                  <div className="flex items-center justify-between px-10">
-                    <div className="flex items-center gap-6">
-                       <div className="w-12 h-1 bg-emerald-500 rounded-full"></div>
-                       <h3 className="text-[14px] font-black text-white uppercase tracking-[0.6em]">
-                          [03. High-End Signal Chain]
+                {/* 3. STUDIO RACK UNITS */}
+                <section className="space-y-16">
+                  <div className="flex items-center justify-between px-8">
+                    <div className="flex items-center gap-4">
+                       <div className="w-10 h-1 bg-emerald-500 rounded-full"></div>
+                       <h3 className="text-[12px] font-black text-white uppercase tracking-[0.5em]">
+                          [03. High-End Plugin Rack]
                        </h3>
                     </div>
-                    <div className="flex items-center gap-4">
-                       <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
-                       <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">8 Stage Reconstruction</span>
+                    <div className="flex items-center gap-4 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                       <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">8 Units Active</span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-20">
+                  <div className="grid grid-cols-1 gap-16">
                     {report.plugin_chain.map((item, idx) => (
-                      <div key={idx} className="bg-[#161B22] border border-white/5 rounded-[5rem] overflow-hidden flex flex-col shadow-3xl hover:shadow-cyan-500/5 hover:border-cyan-500/20 transition-all duration-1000 group ring-1 ring-white/10">
+                      <div key={idx} className="bg-[#101419] border border-white/5 rounded-[4rem] overflow-hidden flex flex-col shadow-3xl hover:border-cyan-500/20 transition-all duration-1000 group ring-1 ring-white/10">
                         
-                        {/* Rack Header */}
-                        <div className="bg-black/40 px-16 py-10 flex items-center justify-between border-b border-white/5 relative">
-                           <div className="flex items-center gap-12 relative z-10">
-                              <div className="w-20 h-20 rounded-[2.5rem] bg-[#0D1117] flex items-center justify-center text-lg font-black text-cyan-500 shadow-3xl ring-1 ring-white/10 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-700">
+                        {/* Unit Rack Bar */}
+                        <div className="bg-black/60 px-12 py-8 flex items-center justify-between border-b border-white/5 relative">
+                           <div className="flex items-center gap-8 relative z-10">
+                              <div className="w-16 h-16 rounded-[1.8rem] bg-[#080B0F] flex items-center justify-center text-md font-black text-cyan-500 shadow-2xl ring-1 ring-white/10 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-500">
                                 {idx + 1}
                               </div>
                               <div>
-                                <h4 className="text-xl font-black text-white uppercase tracking-[0.4em] mb-2 group-hover:text-cyan-500 transition-colors">{item.plugin}</h4>
-                                <div className="flex items-center gap-4">
-                                   <div className="flex gap-1.5">
-                                      {[1,2,3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-cyan-500/30"></div>)}
+                                <h4 className="text-lg font-black text-white uppercase tracking-[0.3em] mb-1 group-hover:text-cyan-400 transition-colors">{item.plugin}</h4>
+                                <div className="flex items-center gap-3">
+                                   <div className="flex gap-1">
+                                      {[1,2,3].map(i => <div key={i} className="w-1 h-1 rounded-full bg-cyan-500/20"></div>)}
                                    </div>
-                                   <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Hardware Signal Processor</p>
+                                   <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em]">Signal Precision Unit</p>
                                 </div>
                               </div>
                            </div>
-                           <div className="flex gap-4 relative z-10">
-                              <div className="w-4 h-4 rounded-full bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)]"></div>
-                              <div className="w-4 h-4 rounded-full bg-amber-500"></div>
-                              <div className="w-4 h-4 rounded-full bg-emerald-500"></div>
+                           <div className="flex gap-3 relative z-10">
+                              <div className="w-3.5 h-3.5 rounded-full bg-rose-600 shadow-lg shadow-rose-600/30"></div>
+                              <div className="w-3.5 h-3.5 rounded-full bg-amber-600"></div>
+                              <div className="w-3.5 h-3.5 rounded-full bg-emerald-600"></div>
                            </div>
                         </div>
 
                         <div className="flex flex-col xl:flex-row">
-                          {/* Hardware Visualization */}
-                          <div className="xl:w-1/2 bg-[#0D1117] p-16 flex items-center justify-center svg-container-highres relative overflow-hidden border-b xl:border-b-0 xl:border-r border-white/5 shadow-inner">
-                            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{backgroundImage: 'radial-gradient(circle, #fff 2px, transparent 2px)', backgroundSize: '40px 40px'}}></div>
-                            <div dangerouslySetInnerHTML={{ __html: item.visual_demo_svg }} className="w-full drop-shadow-[0_60px_80px_rgba(0,0,0,0.5)] transform group-hover:scale-[1.08] transition-transform duration-1000" />
+                          {/* Hardware Simulation */}
+                          <div className="xl:w-[45%] bg-[#080B0F] p-12 flex items-center justify-center svg-container-3d relative overflow-hidden border-b xl:border-b-0 xl:border-r border-white/5 shadow-inner">
+                            <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{backgroundImage: 'radial-gradient(circle, #fff 1.5px, transparent 1.5px)', backgroundSize: '30px 30px'}}></div>
+                            <div dangerouslySetInnerHTML={{ __html: item.visual_demo_svg }} className="w-full drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)] transform group-hover:scale-[1.05] transition-transform duration-1000" />
                           </div>
                           
-                          {/* Professional Insights */}
-                          <div className="xl:w-1/2 p-20 flex flex-col justify-center bg-transparent space-y-12">
-                            <div className="space-y-6">
-                              <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-white/5 flex items-center justify-center text-slate-400 border border-white/10">
-                                  <i className="fa-solid fa-brain text-xs"></i>
+                          {/* Engineering Panel */}
+                          <div className="xl:w-[55%] p-14 flex flex-col justify-center bg-transparent space-y-10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-10 opacity-[0.02] pointer-events-none">
+                               <i className="fa-solid fa-compact-disc text-[12rem]"></i>
+                            </div>
+                            
+                            <div className="space-y-5 relative z-10">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 border border-white/10">
+                                  <i className="fa-solid fa-sliders-simple text-[10px]"></i>
                                 </div>
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Mixing Mindset</span>
+                                <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.3em]">Engineering Logic</span>
                               </div>
-                              <p className="text-sm text-slate-200 leading-relaxed font-bold pl-10 border-l-2 border-cyan-500/30 italic">
+                              <p className="text-sm text-slate-300 leading-relaxed font-bold pl-8 border-l-2 border-cyan-500/40 italic">
                                 "{item.mixing_mindset}"
                               </p>
                             </div>
 
-                            <div className="space-y-6">
-                              <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500 border border-amber-500/20">
-                                  <i className="fa-solid fa-star text-xs"></i>
+                            <div className="space-y-5 relative z-10">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 border border-amber-500/20">
+                                  <i className="fa-solid fa-sparkles text-[10px]"></i>
                                 </div>
-                                <span className="text-[10px] font-black text-amber-500/80 uppercase tracking-[0.4em]">Studio Secret (Bí mật nhà nghề)</span>
+                                <span className="text-[9px] font-black text-amber-500/70 uppercase tracking-[0.3em]">Studio Secret</span>
                               </div>
-                              <p className="text-sm text-amber-100/80 leading-relaxed font-medium pl-10 border-l-2 border-amber-500/30">
+                              <p className="text-[13px] text-amber-100/70 leading-relaxed font-medium pl-8 border-l-2 border-amber-500/30">
                                 {item.studio_secret}
                               </p>
                             </div>
                             
-                            <div className="bg-[#0D1117] rounded-[3.5rem] p-12 flex items-start gap-10 shadow-3xl transform group-hover:-translate-y-4 transition-all duration-700 border border-white/10 ring-1 ring-white/5">
-                              <div className="w-16 h-16 rounded-[1.5rem] bg-cyan-600 flex items-center justify-center text-white shrink-0 shadow-2xl shadow-cyan-600/30">
-                                 <i className="fa-solid fa-sliders text-2xl"></i>
+                            <div className="bg-[#080B0F] rounded-[2.5rem] p-10 flex items-start gap-8 shadow-inner border border-white/10 group/knob hover:border-cyan-500/30 transition-all duration-500">
+                              <div className="w-14 h-14 rounded-2xl bg-cyan-600/10 flex items-center justify-center text-cyan-500 shrink-0 shadow-2xl border border-cyan-500/20 group-hover/knob:bg-cyan-500 group-hover/knob:text-white transition-all">
+                                 <i className="fa-solid fa-dial text-xl"></i>
                               </div>
-                              <div className="space-y-3">
-                                <p className="text-[11px] font-black text-cyan-400 uppercase tracking-[0.5em] mb-2">Technical Knobs</p>
-                                <div className="text-[16px] text-white font-black leading-loose font-mono tracking-tight bg-white/5 px-6 py-4 rounded-2xl border border-white/5">
+                              <div className="space-y-2">
+                                <p className="text-[10px] font-black text-cyan-400/60 uppercase tracking-[0.4em] mb-1">Target Settings</p>
+                                <div className="text-[14px] text-white font-black leading-relaxed font-mono tracking-tight bg-white/5 px-5 py-3 rounded-xl border border-white/5 shadow-inner">
                                   {item.knob_instruction}
                                 </div>
                               </div>
@@ -300,19 +335,19 @@ const App: React.FC = () => {
                     ))}
                   </div>
                   
-                  {/* MASTERING BLUEPRINT */}
-                  <div className="mt-32 p-32 bg-[#161B22] rounded-[6rem] shadow-4xl relative overflow-hidden group border border-white/5 ring-1 ring-white/10">
-                    <div className="absolute top-0 right-0 p-32 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 transition-all duration-1000">
-                      <i className="fa-solid fa-crown text-[25rem] text-white"></i>
+                  {/* MASTERING SECTION */}
+                  <div className="mt-24 p-24 bg-[#101419] rounded-[5rem] shadow-4xl relative overflow-hidden group border border-white/5 ring-1 ring-white/10">
+                    <div className="absolute top-0 right-0 p-24 opacity-[0.02] group-hover:opacity-[0.06] group-hover:scale-110 transition-all duration-1000">
+                      <i className="fa-solid fa-waveform-lines text-[20rem] text-white"></i>
                     </div>
-                    <div className="relative z-10 max-w-5xl">
-                      <div className="flex items-center gap-10 mb-16">
-                        <div className="w-20 h-20 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/20 shadow-4xl shadow-cyan-500/10">
-                           <i className="fa-solid fa-gem text-3xl"></i>
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-8 mb-12">
+                        <div className="w-16 h-16 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-400 border border-cyan-500/20 shadow-4xl">
+                           <i className="fa-solid fa-vial text-2xl"></i>
                         </div>
-                        <h5 className="text-[16px] font-black text-white uppercase tracking-[0.8em]">Legendary Mastering Blueprint</h5>
+                        <h5 className="text-[14px] font-black text-white uppercase tracking-[0.6em]">Legendary Mastering Blueprint</h5>
                       </div>
-                      <p className="text-2xl text-slate-200 leading-[2] font-medium italic opacity-95 pl-20 border-l-4 border-cyan-500/40 drop-shadow-2xl">
+                      <p className="text-xl text-slate-200 leading-[1.8] font-medium italic opacity-90 pl-16 border-l-4 border-cyan-500/30 drop-shadow-xl">
                         {report.mastering_advice}
                       </p>
                     </div>
@@ -321,25 +356,25 @@ const App: React.FC = () => {
 
               </div>
             ) : (
-              <div className="h-full min-h-[900px] border-2 border-dashed border-white/5 rounded-[7rem] flex flex-col items-center justify-center text-center p-32 bg-[#0D1117] relative overflow-hidden group shadow-inner">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#161B22_3px,_transparent_3px)] bg-[size:64px_64px] opacity-60"></div>
+              <div className="h-full min-h-[850px] border-2 border-dashed border-white/5 rounded-[6rem] flex flex-col items-center justify-center text-center p-24 bg-[#080B0F] relative overflow-hidden group shadow-inner">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_#101419_2.5px,_transparent_2.5px)] bg-[size:50px_50px] opacity-40"></div>
                 
-                <div className="relative mb-32 transition-all duration-1000 group-hover:scale-110">
-                   <div className="absolute inset-0 bg-cyan-500/20 blur-[200px] rounded-full scale-150 animate-pulse"></div>
-                   <div className="w-64 h-64 rounded-[6rem] bg-[#161B22] border border-white/10 flex items-center justify-center text-[12rem] relative z-10 shadow-4xl text-slate-800/40 ring-1 ring-white/10">
-                      <i className="fa-solid fa-microphone-lines animate-pulse"></i>
+                <div className="relative mb-28 transition-all duration-1000 group-hover:scale-105">
+                   <div className="absolute inset-0 bg-cyan-500/10 blur-[150px] rounded-full scale-150 animate-pulse"></div>
+                   <div className="w-56 h-56 rounded-[5rem] bg-[#101419] border border-white/10 flex items-center justify-center text-[10rem] relative z-10 shadow-4xl text-slate-900/40 ring-1 ring-white/10">
+                      <i className="fa-solid fa-waveform animate-pulse"></i>
                    </div>
                 </div>
 
-                <h3 className="text-7xl font-black text-white mb-10 tracking-tighter uppercase relative z-10 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-600">Pro Vocal Master</h3>
-                <p className="max-w-3xl mx-auto text-2xl font-medium text-slate-500 leading-relaxed italic relative z-10 px-12">
-                  "Giải mã chuỗi tín hiệu triệu đô. Mang tư duy và kỹ thuật của những Sound Engineer hàng đầu thế giới vào giọng hát của bạn."
+                <h3 className="text-6xl font-black text-white mb-8 tracking-tighter uppercase relative z-10 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-700">Studio Analytics</h3>
+                <p className="max-w-2xl mx-auto text-xl font-medium text-slate-500 leading-relaxed italic relative z-10 px-8">
+                  "Hệ thống phân tích 8 bước mô phỏng chính xác tư duy kỹ thuật của những Sound Engineer hàng đầu thế giới."
                 </p>
                 
-                <div className="mt-40 flex flex-wrap justify-center gap-16 relative z-10">
-                  <Badge label="ANALOG 3D MOCKUPS" />
-                  <Badge label="SINGER GRADE QUALITY" />
-                  <Badge label="STUDIO SECRETS" />
+                <div className="mt-32 flex flex-wrap justify-center gap-12 relative z-10">
+                  <Badge label="ANALOG RECON" />
+                  <Badge label="STUDIO MONITORING" />
+                  <Badge label="MASTER BLUEPRINT" />
                 </div>
               </div>
             )}
@@ -347,46 +382,60 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      <footer className="border-t border-white/5 py-40 bg-[#0A0C10] relative">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between text-[11px] font-black text-slate-600 uppercase tracking-[0.8em]">
-           <div className="flex items-center gap-12">
-             <div className="w-20 h-20 bg-white/5 rounded-[2.5rem] flex items-center justify-center shadow-4xl border border-white/10 group cursor-pointer hover:bg-cyan-500 hover:text-white transition-all duration-700">
-                <i className="fa-solid fa-bolt text-3xl group-hover:scale-125 transition-transform duration-500"></i>
+      <footer className="border-t border-white/5 py-32 bg-[#06080A] relative">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between text-[11px] font-black text-slate-600 uppercase tracking-[0.6em]">
+           <div className="flex items-center gap-10">
+             <div className="w-16 h-16 bg-white/5 rounded-[2rem] flex items-center justify-center shadow-4xl border border-white/10 group cursor-pointer hover:bg-cyan-600 hover:text-white transition-all duration-500">
+                <i className="fa-solid fa-microphone-stand text-2xl group-hover:scale-110 transition-transform"></i>
              </div>
              <div className="text-left">
-               <p className="text-white mb-2 tracking-[0.5em]">VOCAL MASTERMIND AI</p>
-               <p className="opacity-40 tracking-widest text-[9px]">Professional Audio Reconnaissance Engine v3.5</p>
+               <p className="text-white mb-1 tracking-[0.4em]">VOCAL MASTERMIND AI</p>
+               <p className="opacity-30 tracking-widest text-[9px]">Professional Audio Reconnaissance Engine v3.6</p>
              </div>
            </div>
-           <div className="flex flex-wrap justify-center gap-20 mt-20 lg:mt-0 opacity-60 hover:opacity-100 transition-opacity">
-             <span className="hover:text-cyan-500 transition-all cursor-pointer border-b-2 border-transparent hover:border-cyan-500 pb-3">Acoustic Space</span>
-             <span className="hover:text-cyan-500 transition-all cursor-pointer border-b-2 border-transparent hover:border-cyan-500 pb-3">Dynamic Lab</span>
-             <span className="hover:text-cyan-500 transition-all cursor-pointer border-b-2 border-transparent hover:border-cyan-500 pb-3">Hardware Rack</span>
+           <div className="flex flex-wrap justify-center gap-16 mt-16 lg:mt-0 opacity-50 hover:opacity-100 transition-opacity">
+             <span className="hover:text-cyan-500 transition-all cursor-pointer">Dynamic Unit</span>
+             <span className="hover:text-cyan-500 transition-all cursor-pointer">Harmonic Lab</span>
+             <span className="hover:text-cyan-500 transition-all cursor-pointer">Spectral Rack</span>
            </div>
         </div>
       </footer>
 
       <style>{`
-        .svg-container svg { max-height: 600px; width: 100%; transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); filter: drop-shadow(0 40px 60px rgba(0,0,0,0.5)); }
-        .svg-container-highres svg { max-height: 700px; width: 100%; }
+        .svg-container-monitor svg { max-height: 500px; width: 100%; filter: drop-shadow(0 30px 50px rgba(0,0,0,0.5)); }
+        .svg-container-3d svg { max-height: 600px; width: 100%; }
         
-        .custom-audio::-webkit-media-controls-panel {
-          background-color: transparent;
+        /* Custom Pro Audio Player - Light Version for High Contrast */
+        .custom-audio-pro {
+          filter: none !important;
         }
-        .custom-audio::-webkit-media-controls-play-button {
-          background-color: #06B6D4;
+        .custom-audio-pro::-webkit-media-controls-panel {
+          background-color: #FFFFFF !important;
+          border-radius: 12px;
+        }
+        .custom-audio-pro::-webkit-media-controls-play-button {
+          background-color: #0891B2 !important;
           border-radius: 50%;
+          color: white !important;
+          transform: scale(0.9);
+        }
+        .custom-audio-pro::-webkit-media-controls-current-time-display,
+        .custom-audio-pro::-webkit-media-controls-time-remaining-display {
+          color: #0F172A !important;
+          font-weight: 900;
+          font-size: 10px;
+          font-family: 'JetBrains Mono', monospace;
         }
         
-        @keyframes fade-in { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
     </div>
   );
 };
 
 const Badge: React.FC<{ label: string }> = ({ label }) => (
-  <span className="px-20 py-8 bg-[#161B22] border border-white/10 rounded-full text-[14px] font-black uppercase text-slate-500 shadow-3xl hover:border-cyan-500 hover:text-cyan-400 hover:shadow-cyan-500/10 hover:-translate-y-2 transition-all cursor-default tracking-[0.3em] active:scale-95 ring-1 ring-white/5">
+  <span className="px-14 py-6 bg-[#101419] border border-white/5 rounded-full text-[12px] font-black uppercase text-slate-600 shadow-3xl hover:border-cyan-500 hover:text-cyan-400 hover:-translate-y-1 transition-all cursor-default tracking-[0.2em] ring-1 ring-white/5">
     {label}
   </span>
 );

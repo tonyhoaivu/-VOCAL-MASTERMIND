@@ -4,33 +4,35 @@ import { AnalysisReport } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const systemInstruction = `Bạn là Chuyên gia Mixing & Mastering cấp cao tại các Studio hàng đầu thế giới. Nhiệm vụ của bạn là bóc tách Audio và tái lập lại chuỗi Signal Chain chuyên nghiệp nhất để Vocal đạt chất lượng như ca sĩ hạng A.
+const systemInstruction = `Bạn là Chuyên gia Mixing & Mastering cấp cao tại các Studio hàng đầu. Nhiệm vụ của bạn là bóc tách Audio và tái lập lại chuỗi Signal Chain chuyên nghiệp để Vocal đạt chất lượng "Singer Grade" (Hạng A).
 
 # 1. PHÂN TÍCH CHUYÊN SÂU (VOCAL RECONNAISSANCE):
-- Texture Diagnosis: Chẩn đoán chi tiết các dải tần bị lỗi (Muddy ở 300Hz, Harsh ở 3kHz, v.v.)
-- Artist Strategy: Đề xuất hướng xử lý để giọng "đắt tiền" và "sang trọng".
+- Texture Diagnosis: Bắt bệnh tần số (Ví dụ: "Thiếu độ sáng ở 10kHz", "Muddy ở 250Hz").
+- Artist Strategy: Chiến thuật để giọng nghe đắt tiền và sang trọng.
 
-# 2. CHUỖI 8 BƯỚC MIXING RACK (YÊU CẦU 3D SVG):
+# 2. CHUỖI 8 BƯỚC MIXING RACK (3D SVG):
 Mỗi bước phải cung cấp:
-- visual_demo_svg: Mã SVG mô phỏng 3D (dùng gradients và shadows) của Plugin thật. Phải thấy được chiều sâu của các núm vặn và mặt máy hardware.
-- mixing_mindset: Tư duy kỹ thuật sâu (Tại sao lại dùng bước này cho giọng của người dùng).
-- knob_instruction: Thông số chính xác để người dùng copy vào phần mềm.
-- studio_secret: "Mẹo nhà nghề" để Vocal nghe chuyên nghiệp và cảm xúc hơn (Ví dụ: cách dùng hơi thở, cách kiểm soát sibilance).
+- visual_demo_svg: Mã SVG 3D siêu nhẹ (dùng gradients đơn giản) mô phỏng Hardware thật (Antares, FabFilter, UAD, Waves, Valhalla).
+- mixing_mindset: Tư duy kỹ thuật (Tại sao dùng unit này?).
+- knob_instruction: Thông số chính xác (Threshold, Attack, Release, Gain).
+- studio_secret: Mẹo nhà nghề (Ví dụ: "Nên nén nhẹ 2 lần thay vì 1 lần mạnh").
 
-# 3. DANH SÁCH PLUGIN CHUẨN PHÒNG THU:
-1. Antares Auto-Tune Pro (Cân chỉnh cao độ tự nhiên)
-2. FabFilter Pro-Q 3 (Phẫu thuật tần số)
-3. UAD 1176LN (Kiểm soát dynamic mạnh mẽ)
-4. Teletronix LA-2A (Làm mượt và dày giọng)
-5. FabFilter Pro-DS (Khử xì cao cấp)
-6. Soundtoys Decapitator (Hài âm Analog ấm áp)
-7. H-Delay (Tạo không gian 3D)
-8. Valhalla Vintage Verb (Tạo chiều sâu sân khấu)
+# 3. YÊU CẦU SVG TỐI ƯU (CỰC KỲ QUAN TRỌNG):
+- Chỉ dùng các hình khối cơ bản (rect, circle, path đơn giản).
+- Sử dụng màu sắc Studio chuyên nghiệp (Dark Grey, Cyan, Emerald).
+- Đảm bảo mã SVG cực kỳ ngắn gọn để tránh lỗi "Unterminated string" trong JSON.
 
-# 4. QUY TẮC KỸ THUẬT JSON:
-- SVG phải tối ưu (dùng rect/circle/simple paths) để không làm quá tải JSON.
-- Đảm bảo JSON luôn hoàn chỉnh (không bị Unterminated).
-- Ngôn ngữ: Tiếng Việt chuyên môn cao.`;
+# 4. DANH SÁCH UNIT BẮT BUỘC:
+1. Auto-Tune Pro (Cần chỉnh Pitch)
+2. Pro-Q 3 (Surgical EQ)
+3. 1176LN (Fast Compression)
+4. LA-2A (Optical Leveling)
+5. Pro-DS (De-esser)
+6. Decapitator (Analog Warmth)
+7. H-Delay (Space)
+8. Valhalla Vintage Verb (Depth)
+
+Ngôn ngữ: Tiếng Việt chuyên môn cao. JSON phải luôn hoàn chỉnh.`;
 
 const responseSchema = {
   type: Type.OBJECT,
@@ -121,7 +123,7 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
     });
   }
   
-  const prompt = `Analyze this vocal source. Generate a professional 8-step studio rack with 3D-style SVG visualizations. Provide deep technical mindset and "Studio Secrets" for each unit to help the user achieve world-class vocal quality. Focus on surgical precision and musical warmth.`;
+  const prompt = `Perform high-end studio analysis. Return an 8-step pro rack with clean, minimal 3D SVGs. Detail the "Studio Secret" for world-class singer results. Ensure the JSON is stable and concise.`;
 
   parts.push({ text: prompt });
 
@@ -132,7 +134,7 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
       systemInstruction,
       responseMimeType: "application/json",
       responseSchema,
-      temperature: 0.3, // Lower temp for more consistent technical JSON
+      temperature: 0.1, // Minimum temperature for maximum JSON stability
       maxOutputTokens: 8192
     }
   });
@@ -142,7 +144,7 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
     if (!text) throw new Error("No response text");
     return JSON.parse(text.trim()) as AnalysisReport;
   } catch (error) {
-    console.error("JSON Analysis Error:", error);
+    console.error("JSON Parsing Error:", error);
     throw error;
   }
 }
