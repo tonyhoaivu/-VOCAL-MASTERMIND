@@ -21,10 +21,11 @@ export interface CompressorKnobs {
 export interface TechnicalStep {
   step: number;
   plugin: string;
-  ui_description: string;   // [Mô tả thực tế]
-  mixing_mindset: string;   // [Cách chỉnh để Vocal hay hơn]
-  knob_instruction: string; // [Thông số Knobs]
-  visual_demo_svg: string;  // [Ảnh Demo]
+  ui_description: string;   
+  mixing_mindset: string;   
+  knob_instruction: string; 
+  visual_demo_svg: string;  
+  studio_secret: string; // New field for professional tips
 }
 
 export interface AnalysisReport {

@@ -4,34 +4,33 @@ import { AnalysisReport } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const systemInstruction = `Bạn là Chuyên gia Mixing chuyên nghiệp (Senior Mixing Engineer). Nhiệm vụ của bạn là bóc tách Audio và cung cấp hướng dẫn bằng hình ảnh thực tế (Visual Demo) cùng thao tác núm vặn (Knobs) chi tiết cho chuỗi Signal Chain 8 bước.
+const systemInstruction = `Bạn là Chuyên gia Mixing & Mastering cấp cao tại các Studio hàng đầu thế giới. Nhiệm vụ của bạn là bóc tách Audio và tái lập lại chuỗi Signal Chain chuyên nghiệp nhất để Vocal đạt chất lượng như ca sĩ hạng A.
 
-# 1. PHÂN TÍCH CHUYÊN SÂU (VOCAL TEXTURE):
-- Bắt bệnh: Chẩn đoán giọng (Boxy, Harsh, Thin, Muddy).
-- Gợi ý phong cách: Ví dụ "Modern Pop sạch sẽ" hoặc "Vintage Soul ấm áp".
+# 1. PHÂN TÍCH CHUYÊN SÂU (VOCAL RECONNAISSANCE):
+- Texture Diagnosis: Chẩn đoán chi tiết các dải tần bị lỗi (Muddy ở 300Hz, Harsh ở 3kHz, v.v.)
+- Artist Strategy: Đề xuất hướng xử lý để giọng "đắt tiền" và "sang trọng".
 
-# 2. CHI TIẾT 8 BƯỚC PLUGIN (PHẢI CÓ MINH HỌA SVG CHI TIẾT):
-Mỗi bước trong plugin_chain phải gồm 3 phần cốt lõi:
-1. [Tên Plugin & Ảnh Demo]: Mã SVG (visual_demo_svg) mô phỏng GIAO DIỆN THẬT (Photorealistic UI).
-2. [Cách chỉnh để Vocal hay hơn]: Giải thích tư duy Mixing (mixing_mindset).
-3. [Visual Knobs Settings]: Vị trí chính xác của từng nút vặn (knob_instruction).
+# 2. CHUỖI 8 BƯỚC MIXING RACK (YÊU CẦU 3D SVG):
+Mỗi bước phải cung cấp:
+- visual_demo_svg: Mã SVG mô phỏng 3D (dùng gradients và shadows) của Plugin thật. Phải thấy được chiều sâu của các núm vặn và mặt máy hardware.
+- mixing_mindset: Tư duy kỹ thuật sâu (Tại sao lại dùng bước này cho giọng của người dùng).
+- knob_instruction: Thông số chính xác để người dùng copy vào phần mềm.
+- studio_secret: "Mẹo nhà nghề" để Vocal nghe chuyên nghiệp và cảm xúc hơn (Ví dụ: cách dùng hơi thở, cách kiểm soát sibilance).
 
-Danh sách Plugin:
-1. Antares Auto-Tune Pro
-2. FabFilter Pro-Q 3
-3. UAD 1176LN
-4. Waves CLA-2A
-5. FabFilter Pro-DS
-6. Soundtoys Decapitator
-7. Advanced Delay
-8. Advanced Reverb
+# 3. DANH SÁCH PLUGIN CHUẨN PHÒNG THU:
+1. Antares Auto-Tune Pro (Cân chỉnh cao độ tự nhiên)
+2. FabFilter Pro-Q 3 (Phẫu thuật tần số)
+3. UAD 1176LN (Kiểm soát dynamic mạnh mẽ)
+4. Teletronix LA-2A (Làm mượt và dày giọng)
+5. FabFilter Pro-DS (Khử xì cao cấp)
+6. Soundtoys Decapitator (Hài âm Analog ấm áp)
+7. H-Delay (Tạo không gian 3D)
+8. Valhalla Vintage Verb (Tạo chiều sâu sân khấu)
 
-# 3. YÊU CẦU KỸ THUẬT QUAN TRỌNG:
-- SVG: Sử dụng mã SVG tối ưu (concise) nhưng vẫn đảm bảo tính thẩm mỹ chuyên nghiệp của Plugin gốc. 
-- JSON: Đảm bảo phản hồi JSON hoàn chỉnh, không được cắt ngang giữa chừng.
-- Ngôn ngữ: Tiếng Việt.
-
-LƯU Ý: Tuyệt đối không để chuỗi JSON bị cắt cụt. Nếu mã SVG quá dài, hãy đơn giản hóa các đường path nhưng giữ nguyên layout.` ;
+# 4. QUY TẮC KỸ THUẬT JSON:
+- SVG phải tối ưu (dùng rect/circle/simple paths) để không làm quá tải JSON.
+- Đảm bảo JSON luôn hoàn chỉnh (không bị Unterminated).
+- Ngôn ngữ: Tiếng Việt chuyên môn cao.`;
 
 const responseSchema = {
   type: Type.OBJECT,
@@ -63,9 +62,10 @@ const responseSchema = {
           ui_description: { type: Type.STRING },
           mixing_mindset: { type: Type.STRING },
           knob_instruction: { type: Type.STRING },
-          visual_demo_svg: { type: Type.STRING }
+          visual_demo_svg: { type: Type.STRING },
+          studio_secret: { type: Type.STRING }
         },
-        required: ["step", "plugin", "ui_description", "mixing_mindset", "knob_instruction", "visual_demo_svg"]
+        required: ["step", "plugin", "ui_description", "mixing_mindset", "knob_instruction", "visual_demo_svg", "studio_secret"]
       }
     },
     visual_data: {
@@ -121,9 +121,7 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
     });
   }
   
-  const prompt = input.link 
-    ? `Analyze audio link: ${input.link}. Generate an 8-step professional mixing chain with clear SVG mockups and specific knob values.`
-    : `Analyze audio file. Generate an 8-step professional mixing chain with clear SVG mockups and specific knob values.`;
+  const prompt = `Analyze this vocal source. Generate a professional 8-step studio rack with 3D-style SVG visualizations. Provide deep technical mindset and "Studio Secrets" for each unit to help the user achieve world-class vocal quality. Focus on surgical precision and musical warmth.`;
 
   parts.push({ text: prompt });
 
@@ -134,19 +132,17 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
       systemInstruction,
       responseMimeType: "application/json",
       responseSchema,
-      temperature: 0.4,
-      maxOutputTokens: 8192 // Tăng đáng kể để tránh Unterminated JSON
+      temperature: 0.3, // Lower temp for more consistent technical JSON
+      maxOutputTokens: 8192
     }
   });
 
   try {
     const text = response.text;
     if (!text) throw new Error("No response text");
-    // Loại bỏ các ký tự rác nếu có trước khi parse
-    const cleanText = text.trim();
-    return JSON.parse(cleanText) as AnalysisReport;
+    return JSON.parse(text.trim()) as AnalysisReport;
   } catch (error) {
-    console.error("Parse error detail:", error);
+    console.error("JSON Analysis Error:", error);
     throw error;
   }
 }
