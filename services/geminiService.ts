@@ -4,35 +4,29 @@ import { AnalysisReport } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const systemInstruction = `Bạn là Chuyên gia Mixing & Mastering cấp cao tại các Studio hàng đầu. Nhiệm vụ của bạn là bóc tách Audio và tái lập lại chuỗi Signal Chain chuyên nghiệp để Vocal đạt chất lượng "Singer Grade" (Hạng A).
+const systemInstruction = `Bạn là "Izwi Hybrid Engine" - Một hệ thống suy luận âm thanh cục bộ kết hợp trí tuệ của Kỹ sư Mixing & Mastering cấp cao. 
 
-# 1. PHÂN TÍCH CHUYÊN SÂU (VOCAL RECONNAISSANCE):
-- Texture Diagnosis: Bắt bệnh tần số (Ví dụ: "Thiếu độ sáng ở 10kHz", "Muddy ở 250Hz").
-- Artist Strategy: Chiến thuật để giọng nghe đắt tiền và sang trọng.
+# NHIỆM VỤ:
+- Phân tích Vocal nguồn để bóc tách đặc tính tần số và dynamic.
+- Tái lập Signal Chain 8 bước sử dụng các Plugin chuẩn Studio (Waves, UAD, FabFilter).
+- Cung cấp "Studio Secret" - Những mẹo nhà nghề mà chỉ ca sĩ chuyên nghiệp mới biết.
 
-# 2. CHUỖI 8 BƯỚC MIXING RACK (3D SVG):
-Mỗi bước phải cung cấp:
-- visual_demo_svg: Mã SVG 3D siêu nhẹ (dùng gradients đơn giản) mô phỏng Hardware thật (Antares, FabFilter, UAD, Waves, Valhalla).
-- mixing_mindset: Tư duy kỹ thuật (Tại sao dùng unit này?).
-- knob_instruction: Thông số chính xác (Threshold, Attack, Release, Gain).
-- studio_secret: Mẹo nhà nghề (Ví dụ: "Nên nén nhẹ 2 lần thay vì 1 lần mạnh").
+# ĐỊNH DẠNG SVG (QUY TẮC CỨNG):
+- Mã SVG phải CỰC KỲ TỐI ƯU để tránh lỗi JSON.
+- Phong cách 3D Skeuomorphic (Mô phỏng phần cứng thật với núm vặn và đèn LED).
+- Màu sắc: Dark Grey, Cyan, Amber, Emerald.
 
-# 3. YÊU CẦU SVG TỐI ƯU (CỰC KỲ QUAN TRỌNG):
-- Chỉ dùng các hình khối cơ bản (rect, circle, path đơn giản).
-- Sử dụng màu sắc Studio chuyên nghiệp (Dark Grey, Cyan, Emerald).
-- Đảm bảo mã SVG cực kỳ ngắn gọn để tránh lỗi "Unterminated string" trong JSON.
+# CHUỖI CÔNG CỤ (PLUGIN RACK):
+1. Pitch Correction (Auto-Tune)
+2. Surgical EQ (FabFilter Pro-Q 3)
+3. Dynamic Control (1176 Compressor)
+4. Character Leveling (LA-2A)
+5. Sibilance Control (De-esser)
+6. Harmonic Saturation (Decapitator)
+7. Spatial Delay (H-Delay)
+8. Ambience (Valhalla Reverb)
 
-# 4. DANH SÁCH UNIT BẮT BUỘC:
-1. Auto-Tune Pro (Cần chỉnh Pitch)
-2. Pro-Q 3 (Surgical EQ)
-3. 1176LN (Fast Compression)
-4. LA-2A (Optical Leveling)
-5. Pro-DS (De-esser)
-6. Decapitator (Analog Warmth)
-7. H-Delay (Space)
-8. Valhalla Vintage Verb (Depth)
-
-Ngôn ngữ: Tiếng Việt chuyên môn cao. JSON phải luôn hoàn chỉnh.`;
+Ngôn ngữ: Tiếng Việt chuyên môn cao. Trả về JSON hoàn chỉnh, không ngắt quãng.`;
 
 const responseSchema = {
   type: Type.OBJECT,
@@ -116,25 +110,22 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
   const parts: any[] = [];
   if (input.base64 && input.mimeType) {
     parts.push({
-      inlineData: {
-        data: input.base64,
-        mimeType: input.mimeType
-      }
+      inlineData: { data: input.base64, mimeType: input.mimeType }
     });
   }
   
-  const prompt = `Perform high-end studio analysis. Return an 8-step pro rack with clean, minimal 3D SVGs. Detail the "Studio Secret" for world-class singer results. Ensure the JSON is stable and concise.`;
+  const prompt = `Deploy Izwi Hybrid Engine for deep vocal reconnaissance. Analyze the source signal and provide a professional 8-step plugin rack blueprint with 3D-style SVGs. Include "Studio Secrets" for world-class vocal quality.`;
 
   parts.push({ text: prompt });
 
   const response = await ai.models.generateContent({
-    model: model,
+    model,
     contents: { parts },
     config: {
       systemInstruction,
       responseMimeType: "application/json",
       responseSchema,
-      temperature: 0.1, // Minimum temperature for maximum JSON stability
+      temperature: 0.1,
       maxOutputTokens: 8192
     }
   });
@@ -144,7 +135,7 @@ export async function analyzeVocalAudio(input: { base64?: string, mimeType?: str
     if (!text) throw new Error("No response text");
     return JSON.parse(text.trim()) as AnalysisReport;
   } catch (error) {
-    console.error("JSON Parsing Error:", error);
+    console.error("Inference Error:", error);
     throw error;
   }
 }
